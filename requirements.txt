@@ -1,3 +1,4 @@
 falcon==3.1.0
 Cython==0.29.32
 uvicorn==0.18.3
+httpie==3.2.1
