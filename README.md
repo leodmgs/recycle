@@ -1,4 +1,8 @@
 # Recycle
 
-## How to run
-`uvicorn app:app`
+## run
+`$ uvicorn recycle.asgi:app`
+
+## check style
+`$ flake8 recycle`
+

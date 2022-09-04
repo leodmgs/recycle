@@ -1,32 +1,29 @@
 import json
-from typing import List, Union
+import logging
 
-from ..exceptions import AlreadyExistError
 from ..models.event import Event
 
 
 class CreateEvent:
-    
+
     def __init__(self) -> None:
-        self.events = []
+        self.logger = logging.getLogger('simpleExample')
 
     async def on_get(self, req, res):
-        data = [e.to_dict() for e in self.events]
-        print(data)
-        res.media = data
+        self.logger.debug(
+            f"[CreateEvent] on_get params: {req.params.get('event_name')}")
+        if 'id' in req.params:
+            events_data = Event.get_by_id(req.params.get('id'))
+        elif 'event_name' in req.params:
+            events_data = Event.get_by_name(req.params.get('event_name'))
+        else:
+            events_data = Event.get_all()
+        self.logger.debug(f'Events found: {events_data}')
+        res.media = events_data
 
     async def on_post(self, req, res):
         data = await req.media
         event = Event(**data)
-        self.events.append(event)
-        res.media = {'success': True}
-
-    def get_events(self) -> List[Event]:
-        return self.events
-
-    def create_event(self, event: Event) -> Union[Event, None]:
-        for e in self.events:
-            if event.id == e.id:
-                raise AlreadyExistError(f'Event with ID {event.id} already exists')
-        self.events.append(event)
-        return event
+        event.save()
+        event.reload()
+        res.media = json.loads(event.to_json())
