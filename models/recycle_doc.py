@@ -13,8 +13,8 @@ class RecycleDocument(Document):
     def get_by_id(cls, id: Union[str, ObjectId]):
         if isinstance(id, str):
             id = ObjectId(id)
-        queryset = cls.objects(id=id)
-        return queryset.first().to_json()
+        queryset = cls.objects.get(id=id)
+        return queryset.to_json()
 
     @classmethod
     def get_all(cls):

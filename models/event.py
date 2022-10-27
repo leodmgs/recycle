@@ -28,6 +28,7 @@ class Event(RecycleDocument):
     def to_json(self):
         return {
             "id": str(self.pk),
+            "user": str(getattr(self.user_id, "id")),
             'name': self.name,
             'target_date': self.target_date.strftime("%c"),
             'created_at': self.created_at.strftime("%c"),
