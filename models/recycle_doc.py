@@ -1,7 +1,6 @@
-import json
-from bson import ObjectId
 from typing import Union
 
+from bson import ObjectId
 from mongoengine import Document
 
 
@@ -12,21 +11,18 @@ class RecycleDocument(Document):
 
     @classmethod
     def get_by_id(cls, id: Union[str, ObjectId]):
-        if not id:
-            raise ValueError('invalid id argument')
         if isinstance(id, str):
             id = ObjectId(id)
         queryset = cls.objects(id=id)
-        return json.loads(queryset.to_json())
-
-    @classmethod
-    def get_by_name(cls, name: str):
-        if not name:
-            raise ValueError('invalid name argument')
-        queryset = cls.objects(name=name)
-        return json.loads(queryset.to_json())
+        return queryset.first().to_json()
 
     @classmethod
     def get_all(cls):
         queryset = cls.objects()
-        return json.loads(queryset.to_json())
+        return [q.to_json() for q in queryset]
+
+    def to_json():
+        not NotImplementedError()
+
+    def __str__(self):
+        self.to_json()
